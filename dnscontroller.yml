@@ -1,0 +1,28 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  namespace: kube-system
+  name: dns-controller
+  labels:
+    app: dns-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-controller
+  template:
+    metadata:
+      labels:
+        app: dns-controller
+    spec:
+      containers:
+        - name: controller
+          image: gcr.io/cluster-171711/dns-controller:master
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: dns-controller-configuration
